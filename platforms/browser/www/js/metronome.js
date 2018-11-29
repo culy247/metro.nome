@@ -1,6 +1,6 @@
 var sound = new Howl({
-      src: ['sounds/woodblock.mp3']
-    });
+	src: ["sounds/woodblock.mp3"]
+});
 
 class Time {
 	constructor(bpm, division) {
@@ -50,20 +50,20 @@ $(function() {
 	var tempo = parseInt($("#tempo").val());
 	var m;
 	var t;
+	var timer;
 
-	$("#start").on('click', function() {
+	$("#start").on("click", function() {
 		instantiateNewMeter();
-		timer(playing=true);
+		startMetronome();
 		$("#start").hide();
 		$("#stop").show();
 	});
 
-	$("#stop").on('click', function() {
-		playing = false;
-		clearInterval(timer);
+	$("#stop").on("click", function() {
+		stopPlaying();
 		$("#stop").hide();
 		$("#start").show();
-	})
+	});
 
 	$("#division").change(function() {
 		division = parseInt($("#division").val());
@@ -80,24 +80,24 @@ $(function() {
 		instantiateNewMeter();
 	});
 
-	var timer = function() {
-		setInterval(playingFunc, t.beatsPerMin);
-	};
+	function startMetronome() {
+	timer = setInterval(function() {
+		whilePlaying();
+	}, t.beatsPerMin);
+};
 
 	function stopPlaying() {
 		clearInterval(timer);
 		nestedBeatArray = [];
 		beatSeries = [];
-		count = 0;
+		count = 1;
 		pointer = 0;
-	}
+	};
 
-	function playingFunc() {
-		if (playing == true) {
-			sound.play();
-			$("#counter").text(beatSeries[pointer]);
-			console.log(count, beatSeries[pointer]);
-		}
+	function whilePlaying() {
+		sound.play();
+		$("#counter").text(beatSeries[pointer]);
+		console.log(count, beatSeries[pointer]);
 		pointer = pointer + 1;
 
 		if (pointer == beatSeries.length) {
@@ -107,15 +107,14 @@ $(function() {
 	}
 
 	function instantiateNewMeter() {
-		m = null
+		m = null;
 		t = null;
 		m = new Meter(num_beats, division);
 		t = new Time(tempo, division);
-			// each nested array represents a unit of our meter
+		// each nested array represents a unit of our meter
 		nestedBeatArray = m.beatSeries;
 
-	// flatten the nested time array to prepare for playing
+		// flatten the nested time array to prepare for playing
 		beatSeries = [].concat(...nestedBeatArray);
-	};
-
+	}
 });
