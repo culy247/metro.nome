@@ -53,6 +53,7 @@ $(function() {
 	var timer;
 
 	$("#start").on("click", function() {
+		playing = true;
 		instantiateNewMeter();
 		startMetronome();
 		$("#start").hide();
@@ -67,32 +68,34 @@ $(function() {
 
 	$("#division").change(function() {
 		division = parseInt($("#division").val());
-		instantiateNewMeter();
+		updateMetronome();
 	});
 
 	$("#beats").change(function() {
 		num_beats = parseInt($("#beats").val());
-		instantiateNewMeter();
+		updateMetronome();
 	});
 
 	$("#tempo").change(function() {
 		tempo = parseInt($("#tempo").val());
-		instantiateNewMeter();
+		updateMetronome();
 	});
 
 	function startMetronome() {
-	timer = setInterval(function() {
-		whilePlaying();
-	}, t.beatsPerMin);
-};
+		playing = true;
+		timer = setInterval(function() {
+			whilePlaying();
+		}, t.beatsPerMin);
+	}
 
 	function stopPlaying() {
+		playing = false;
 		clearInterval(timer);
 		nestedBeatArray = [];
 		beatSeries = [];
 		count = 1;
 		pointer = 0;
-	};
+	}
 
 	function whilePlaying() {
 		sound.play();
@@ -103,6 +106,17 @@ $(function() {
 		if (pointer == beatSeries.length) {
 			count = count + 1;
 			pointer = 0;
+		}
+	}
+
+	function updateMetronome() {
+		if (playing) {
+			stopPlaying();
+			instantiateNewMeter();
+			startMetronome();
+		}
+		else {
+			instantiateNewMeter();
 		}
 	}
 
