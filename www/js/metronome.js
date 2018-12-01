@@ -1,7 +1,7 @@
 var sounds = [
 	new Howl({ src: ["sounds/clave1.wav"] }),
 	new Howl({ src: ["sounds/clave2.wav"] }),
-	new Howl({ src: ["sounds/clave3.wav"]})
+	new Howl({ src: ["sounds/clave3.wav"] })
 ];
 
 class Time {
@@ -32,7 +32,11 @@ class Meter {
 		var sum = 1;
 		var array = [];
 
-		for (var i = 1; i <= seriesLength + 1 - divisions; i = parseFloat((i + divisions).toPrecision(5))) {
+		for (
+			var i = 1;
+			i <= seriesLength + 1 - divisions;
+			i = parseFloat((i + divisions).toPrecision(5))
+		) {
 			sum = parseFloat(i.toFixed(2));
 			array.push(sum);
 		}
@@ -92,9 +96,13 @@ $(function() {
 	function whilePlaying() {
 		if (playing == true) {
 			var sound = soundMap[pointer];
-			sounds[sound].play();
+			try {
+				sounds[sound].play();
+			} catch (err) {
+				sounds[0].play();
+				pointer = 0;
+			}
 			$("#counter").text(beatSeries[pointer]);
-			console.log(count, beatSeries[pointer]);
 			pointer = pointer + 1;
 
 			if (pointer == beatSeries.length) {
@@ -131,16 +139,14 @@ $(function() {
 		for (i = 0; i < beatSeries.length; i++) {
 			if (beatSeries[i] == 1) {
 				soundToMap = 0;
-			}
-			else if (beatSeries[i] % 1 != 0) {
+			} else if (beatSeries[i] % 1 != 0) {
 				soundToMap = 1;
-			}
-			else {
+			} else {
 				soundToMap = 2;
 			}
 			soundMap.push(soundToMap);
 		}
 		console.log(beatSeries);
 		console.log(soundMap);
-	};
+	}
 });

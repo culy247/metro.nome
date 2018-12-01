@@ -33,7 +33,6 @@ class Meter {
 		var array = [];
 
 		for (var i = 1; i <= seriesLength + 1 - divisions; i = parseFloat((i + divisions).toPrecision(5))) {
-			console.log(seriesLength + 1 - divisions, divisions, i)
 			sum = parseFloat(i.toFixed(2));
 			array.push(sum);
 		}
@@ -93,9 +92,14 @@ $(function() {
 	function whilePlaying() {
 		if (playing == true) {
 			var sound = soundMap[pointer];
-			sounds[sound].play();
+			try {
+				sounds[sound].play();
+			}
+			catch(err) {
+				sounds[0].play();
+				pointer = 0;
+			}
 			$("#counter").text(beatSeries[pointer]);
-			console.log(count, beatSeries[pointer]);
 			pointer = pointer + 1;
 
 			if (pointer == beatSeries.length) {
