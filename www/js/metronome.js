@@ -1,6 +1,7 @@
-var strongBeat = new Howl({
-	src: ["sounds/woodblock.mp3"]
-});
+var sounds = [
+	new Howl({ src: ["sounds/woodblock.mp3"] }),
+	new Howl({ src: ["sounds/woodblock1.mp3"] })
+];
 
 class Time {
 	constructor(bpm, division) {
@@ -42,6 +43,7 @@ class Meter {
 $(function() {
 	var nestedBeatArray = [];
 	var beatSeries = [];
+	var soundMap = [];
 	var count = 1;
 	var pointer = 0;
 	var playing;
@@ -88,7 +90,8 @@ $(function() {
 
 	function whilePlaying() {
 		if (playing == true) {
-			strongBeat.play();
+			var sound = soundMap[pointer];
+			sounds[sound].play();
 			$("#counter").text(beatSeries[pointer]);
 			console.log(count, beatSeries[pointer]);
 			pointer = pointer + 1;
@@ -119,11 +122,22 @@ $(function() {
 
 		// flatten the nested time array to prepare for playing
 		beatSeries = [].concat(...nestedBeatArray);
+		mapSounds(beatSeries);
 	}
 
-	function mapsSounds() {
-		// TODO:
-		// if beatSeries is [1,1.5,2,2.5]
-		// then play sounds [strong, weak, strong, weak]
-	}
+	function mapSounds(beatSeries) {
+		soundMap = [];
+		for (i = 0; i < beatSeries.length; i++) {
+			if (beatSeries[i] == 1) {
+				soundToMap = 0;
+			}
+			else if (beatSeries[i] % 1 != 0) {
+				soundToMap = 1;
+			}
+			else {
+				soundToMap = 0;
+			}
+			soundMap.push(soundToMap);
+		}
+	};
 });
