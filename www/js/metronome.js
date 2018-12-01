@@ -1,4 +1,4 @@
-var sound = new Howl({
+var strongBeat = new Howl({
 	src: ["sounds/woodblock.mp3"]
 });
 
@@ -68,56 +68,45 @@ $(function() {
 
 	$("#division").change(function() {
 		division = parseInt($("#division").val());
-		updateMetronome();
+		instantiateNewMeter();
 	});
 
 	$("#beats").change(function() {
 		num_beats = parseInt($("#beats").val());
-		updateMetronome();
+		instantiateNewMeter();
 	});
 
 	$("#tempo").change(function() {
 		tempo = parseInt($("#tempo").val());
-		updateMetronome();
+		instantiateNewMeter();
 	});
 
 	function startMetronome() {
 		playing = true;
-		timer = setInterval(function() {
-			whilePlaying();
-		}, t.beatsPerMin);
+		setTimeout(whilePlaying, t.beatsPerMin);
+	}
+
+	function whilePlaying() {
+		if (playing == true) {
+			strongBeat.play();
+			$("#counter").text(beatSeries[pointer]);
+			console.log(count, beatSeries[pointer]);
+			pointer = pointer + 1;
+
+			if (pointer == beatSeries.length) {
+				count = count + 1;
+				pointer = 0;
+			}
+			setTimeout(whilePlaying, t.beatsPerMin);
+		}
 	}
 
 	function stopPlaying() {
 		playing = false;
-		clearInterval(timer);
 		nestedBeatArray = [];
 		beatSeries = [];
 		count = 1;
 		pointer = 0;
-	}
-
-	function whilePlaying() {
-		sound.play();
-		$("#counter").text(beatSeries[pointer]);
-		console.log(count, beatSeries[pointer]);
-		pointer = pointer + 1;
-
-		if (pointer == beatSeries.length) {
-			count = count + 1;
-			pointer = 0;
-		}
-	}
-
-	function updateMetronome() {
-		if (playing) {
-			stopPlaying();
-			instantiateNewMeter();
-			startMetronome();
-		}
-		else {
-			instantiateNewMeter();
-		}
 	}
 
 	function instantiateNewMeter() {
@@ -130,5 +119,11 @@ $(function() {
 
 		// flatten the nested time array to prepare for playing
 		beatSeries = [].concat(...nestedBeatArray);
+	}
+
+	function mapsSounds() {
+		// TODO:
+		// if beatSeries is [1,1.5,2,2.5]
+		// then play sounds [strong, weak, strong, weak]
 	}
 });
