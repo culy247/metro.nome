@@ -1,6 +1,7 @@
 var sounds = [
-	new Howl({ src: ["sounds/woodblock.mp3"] }),
-	new Howl({ src: ["sounds/woodblock1.mp3"] })
+	new Howl({ src: ["sounds/clave1.wav"] }),
+	new Howl({ src: ["sounds/clave2.wav"] }),
+	new Howl({ src: ["sounds/clave3.wav"]})
 ];
 
 class Time {
@@ -27,11 +28,12 @@ class Meter {
 
 	calcBeatSeries() {
 		var seriesLength = this.beats;
-		var divisions = parseFloat(1 / this.division);
+		var divisions = parseFloat((1 / this.division).toPrecision(5));
 		var sum = 1;
 		var array = [];
 
-		for (var i = 1; i <= seriesLength + 1 - divisions; i = i + divisions) {
+		for (var i = 1; i <= seriesLength + 1 - divisions; i = parseFloat((i + divisions).toPrecision(5))) {
+			console.log(seriesLength + 1 - divisions, divisions, i)
 			sum = parseFloat(i.toFixed(2));
 			array.push(sum);
 		}
@@ -135,10 +137,11 @@ $(function() {
 				soundToMap = 1;
 			}
 			else {
-				soundToMap = 0;
+				soundToMap = 2;
 			}
 			soundMap.push(soundToMap);
 		}
+		console.log(beatSeries);
 		console.log(soundMap);
 	};
 });
